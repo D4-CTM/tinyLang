@@ -1,4 +1,4 @@
-#include "tokenTypes.hpp"
+#include "terminals.hpp"
 
 const char *printTokenType(TokenType tkn) {
   switch (tkn) {
@@ -29,6 +29,18 @@ const char *printTokenType(TokenType tkn) {
     return "DECIMAL_FLOAT_CONSTANT";
   case TokenType::STRING_CONSTANT:
     return "STRING_CONSTANT";
+
+  case TokenType::CONSTANT_MODIFIER:
+    return "CONSTANT_MODIFIER";
+  case TokenType::VARIABLE_MODIFIER:
+    return "VARIABLE_MODIFIER";
+
+  case TokenType::INTEGER_TYPE:
+    return "INTEGER_TYPE";
+  case TokenType::FLOAT_TYPE:
+    return "FLOAT_TYPE";
+  case TokenType::STRING_TYPE:
+    return "STRING_TYPE";
 
   default:
     return "UNKOWN";

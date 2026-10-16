@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tokenTypes.hpp"
+#include "terminals.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <string>

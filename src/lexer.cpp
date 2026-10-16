@@ -1,4 +1,5 @@
 #include "lexer.hpp"
+#include "terminals.hpp"
 
 #include <cctype>
 #include <fstream>
@@ -187,6 +188,12 @@ Token Lexer::getNextToken() {
     std::cerr << "Invalid decimal float constant at: (" << pos.line << ','
               << pos.col << ")\n";
     return UNKOWN_TKN;
+  }
+
+  if (tkn.type == TokenType::IDENTIFIER) {
+    auto it = Keywords.find(tkn.data);
+    if (it != Keywords.end())
+      tkn.type = it->second;
   }
 
   return tkn;
