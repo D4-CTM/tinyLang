@@ -1,18 +1,22 @@
 CXX      := g++
 CXXFLAGS := -Isrc -I/usr/local/include
 LDFLAGS  := -L/usr/local/lib
-LDLIBS   := -lreflex
+VERSION  := c++20
+LDLIBS   := 
+
+GRAPH ?= grammar/graph.png
 
 .PHONY: build clean graph
 
 build:
 	mkdir -p build
-	$(CXX) $(CXXFLAGS) -o build/tinyLang main.cpp src/*.cpp $(LDFLAGS) $(LDLIBS)
+	$(CXX) -std=$(VERSION) $(CXXFLAGS) -o build/tinyLang main.cpp src/*.cpp $(LDFLAGS) $(LDLIBS)
 
 graph:
-	reflex --graphs-file=Grammar/grammar.dot Grammar/grammar.l 
+	reflex --graphs-file=grammar/grammar.dot grammar/grammar.l
 	rm lex.yy.cpp
-	dot -Tpng Grammar/grammar.dot.gv >> Grammar/graph.png
+	mkdir -p $(dir $(GRAPH))
+	dot -Tpng -o $(GRAPH) grammar/grammar.dot.gv
 
 clean:
 	rm -rf build

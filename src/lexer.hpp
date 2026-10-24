@@ -1,54 +1,68 @@
 #pragma once
 
-#include "terminals.hpp"
-#include <cstddef>
-#include <cstdint>
+#include <istream>
 #include <string>
+#include <unordered_map>
+
+enum class TokenId {
+  END_OF_FILE,
+
+  // Single Char Tokens
+  OPEN_PARENTHESIS,
+  CLOSE_PARENTHESIS,
+  OPEN_CURLY_BRACE,
+  CLOSE_CURLY_BRACE,
+  SEMICOLON,
+  EQUAL,
+
+  // MultiChar Tokens
+  IDENTIFIER,
+  DECIMAL_INTEGER_CONSTANT,
+  DECIMAL_FLOAT_CONSTANT,
+  SINGLE_LINE_STRING_LITERAL,
+  MULTI_LINE_STRING_LITERAL,
+  HEX_CONSTANT,
+  BINARY_CONSTANT,
+  OCTAL_CONSTANT,
+
+  // Keywords
+  KW_INT,
+  KW_FLOAT,
+  KW_WHILE,
+  KW_IF,
+
+  // Error Token Identifiers
+  INVALID_TOKEN = 255,
+  INVALID_DECIMAL_FLOAT_CONSTANT,
+  INVALID_HEX_CONSTANT,
+  INVALID_BINARY_CONSTANT,
+  INVALID_OCTAL_CONSTANT,
+  INVALID_FLOAT_CONSTANT,
+  INVALID_STRING_LITERAL,
+};
+
+const auto keywords = std::unordered_map<std::string, TokenId>({
+    {"int", TokenId::KW_INT},
+    {"float", TokenId::KW_FLOAT},
+    {"while", TokenId::KW_WHILE},
+    {"if", TokenId::KW_IF},
+});
 
 struct Token {
-  TokenType type;
+  TokenId token;
   std::string data;
 };
 
-#define UNKOWN_TKN                                                             \
-  Token{                                                                       \
-      TokenType::UNKNOWN,                                                      \
-      "",                                                                      \
-  };
-
-struct Pos {
-  uint32_t line = 1;
-  uint32_t col = 1;
-  uint32_t pos = 0;
-
-  void movePos();
-  void moveLine();
-
-  inline Pos clone() { return Pos{line, col, pos}; }
-  inline void dup(Pos &tar) {
-    tar.line = line;
-    tar.col = col;
-    tar.pos = pos;
-  }
-};
-
 class Lexer {
-private:
-  Pos pos{0};
-  size_t srcLen{0};
-
-  Token getNextToken();
-  Token getStringTkn();
-  // Returns false only if we reach eof byte.
-  bool skipWhitespace();
-
-  // returns raw numeric 0 only if srcLen < pos.pos
-  char getNextChar();
-
 public:
-  Lexer(std::string path);
-  std::string src = "";
+  Lexer(std::istream &is) : stream(is) { nextChar(); }
 
-  Token peek();
-  Token consume();
+  Token nextToken();
+  static const char *tokenToString(TokenId tkn);
+
+private:
+  inline void nextChar() { ch = stream.get(); }
+
+  std::istream &stream;
+  int ch;
 };

@@ -1,21 +1,18 @@
 #include "src/lexer.hpp"
+#include <fstream>
 #include <iostream>
 
-int main(int argc, char** argv) {
-    if (argc == 1) {
-        std::cerr << "Invalid arguments. Expected: <path to compiler> <path to source code file>" << '\n';
-        return 1;
+int main(int argc, const char** argv) {
+    std::ifstream in(argv[1]);
+    Lexer lexer(in);
+
+    Token tkn = lexer.nextToken();
+
+    while (tkn.token != TokenId::END_OF_FILE) {
+        std::cout << "Token: " << lexer.tokenToString(tkn.token) << " [" << tkn.data << "]\n";
+        tkn = lexer.nextToken();
     }
 
-    Lexer lexer(argv[1]);
-
-    Token tkn = lexer.consume();
-    while (tkn.type != TokenType::UNKNOWN) {
-        std::cout << "Token data: " << tkn.data << '\n';
-        std::cout << "Token: " << printTokenType(tkn.type) << '\n' << '\n' ;
-
-        tkn = lexer.consume();
-    }
-
+    in.close();
     return 0;
 }
