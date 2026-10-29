@@ -58,12 +58,11 @@ void Parser::fact() {
     break;
 
   default:
-    throw std::runtime_error(std::format(R"(
-        Invalid token '{0}' at [{1}:{2}]. Expected:
-        - NUMERIC VALUE
-        - IDENTIFIER
-        - OPEN_PARENTHESIS '('
-        )",
-                                         tkn.data, tkn.line, tkn.col));
+    throw std::runtime_error(std::format(
+R"(Invalid token '{0}' at [{1}:{2}]. Expected:
+- NUMERIC VALUE
+- IDENTIFIER
+- OPEN_PARENTHESIS '(')",
+        tkn.data, tkn.line, tkn.col));
   }
 }
