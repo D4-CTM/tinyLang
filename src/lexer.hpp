@@ -14,6 +14,8 @@ enum class TokenId {
   CLOSE_CURLY_BRACE,
   SEMICOLON,
   EQUAL,
+  PLUS,
+  STAR,
 
   // MultiChar Tokens
   IDENTIFIER,
@@ -51,6 +53,8 @@ const auto keywords = std::unordered_map<std::string, TokenId>({
 struct Token {
   TokenId token;
   std::string data;
+  int line;
+  int col;
 };
 
 class Lexer {
@@ -61,8 +65,18 @@ public:
   static const char *tokenToString(TokenId tkn);
 
 private:
-  inline void nextChar() { ch = stream.get(); }
+  inline void nextChar() { 
+      col++;
+      if (ch == '\n') {
+          line++;
+          col = 0;
+      }
+
+      ch = stream.get();
+  }
 
   std::istream &stream;
+  int line = 1;
+  int col = 0;
   int ch;
 };

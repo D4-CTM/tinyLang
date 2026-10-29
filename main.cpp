@@ -1,18 +1,19 @@
-#include "src/lexer.hpp"
+#include "src/parser.hpp"
+#include <exception>
 #include <fstream>
 #include <iostream>
 
-int main(int argc, const char** argv) {
-    std::ifstream in(argv[1]);
-    Lexer lexer(in);
+int main(int argc, const char **argv) {
+  std::ifstream in(argv[1]);
+  Parser parser(in);
 
-    Token tkn = lexer.nextToken();
+  try {
+    parser.parse();
+  } catch (std::exception &ex) {
+    std::cerr << ex.what() << '\n';
+  }
 
-    while (tkn.token != TokenId::END_OF_FILE) {
-        std::cout << "Token: " << lexer.tokenToString(tkn.token) << " [" << tkn.data << "]\n";
-        tkn = lexer.nextToken();
-    }
+  in.close();
 
-    in.close();
-    return 0;
+  return 0;
 }
