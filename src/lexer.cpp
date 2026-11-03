@@ -405,7 +405,7 @@ Token Lexer::nextToken() {
   return {TokenId::END_OF_FILE, "<<EOF>>",startLine,startCol};
 }
 
-const char *Lexer::tokenToString(TokenId tkn) {
+const char * tokenToString(TokenId& tkn) {
   switch (tkn) {
   case TokenId::OPEN_PARENTHESIS:
     return "OPEN_PARENTHESIS";

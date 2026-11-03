@@ -7,8 +7,8 @@ void Parser::expect(TokenId expected) {
   if (tkn.token != expected) {
     throw std::runtime_error(
         std::format("Expected: {0}. Received: {1}. At [{2}:{3}]",
-                    lexer.tokenToString(expected),
-                    lexer.tokenToString(tkn.token), tkn.line, tkn.col));
+                    tokenToString(expected),
+                    tokenToString(tkn.token), tkn.line, tkn.col));
   }
 
   nextToken();
@@ -59,7 +59,7 @@ void Parser::fact() {
 
   default:
     throw std::runtime_error(std::format(
-R"(Invalid token '{0}' at [{1}:{2}]. Expected:
+        R"(Invalid token '{0}' at [{1}:{2}]. Expected:
 - NUMERIC VALUE
 - IDENTIFIER
 - OPEN_PARENTHESIS '(')",

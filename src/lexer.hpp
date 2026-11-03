@@ -55,28 +55,30 @@ struct Token {
   std::string data;
   int line;
   int col;
+
 };
+
+const char *tokenToString(TokenId& tkn);
 
 class Lexer {
 public:
   Lexer(std::istream &is) : stream(is) { nextChar(); }
 
   Token nextToken();
-  static const char *tokenToString(TokenId tkn);
 
 private:
-  inline void nextChar() { 
-      col++;
-      if (ch == '\n') {
-          line++;
-          col = 0;
-      }
+  inline void nextChar() {
+    col++;
+    if (ch == '\n') {
+      line++;
+      col = 0;
+    }
 
-      ch = stream.get();
+    ch = stream.get();
   }
 
   std::istream &stream;
   int line = 1;
   int col = 0;
-  int ch;
+  int ch = 0;
 };
