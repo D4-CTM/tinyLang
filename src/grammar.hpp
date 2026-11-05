@@ -40,13 +40,6 @@ template <std::uint32_t rows, std::uint32_t cols> struct Matrix {
   };
 };
 
-/*
- * Struct made using as a reference:
- * https://www.youtube.com/watch?v=et1fjd8X1ho
- */
-template <typename... Callable> struct Visitor : Callable... {
-  using Callable::operator()...;
-};
 
 class Parser {
 public:
