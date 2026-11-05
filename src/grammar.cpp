@@ -151,6 +151,18 @@ void Parser::buildMatrix() {
            TokenId::CLOSE_PARENTHESIS});
 }
 
+void printVariant(GrammarItem gi) {
+  if (std::holds_alternative<TokenId>(gi)) {
+    auto tkn = std::get<TokenId>(gi);
+
+    std::cout << "Token found: " << tokenToString(tkn) << '\n';
+  } else if (std::holds_alternative<NonTerminals>(gi)) {
+    auto nt = std::get<NonTerminals>(gi);
+
+    std::cout << "NonTerminal found: " << nonTerminalToString(nt) << '\n';
+  }
+}
+
 void Parser::parse() {
   gs.push(TokenId::END_OF_FILE);
   gs.push(NonTerminals::PROGRAM);
@@ -159,50 +171,51 @@ void Parser::parse() {
   while (!gs.empty()) {
     auto x = gs.top();
 
-    std::visit(
-        Visitor{[&](TokenId tkn) {
-                  std::cout << "Token found: " << tokenToString(tkn) << '\n';
-                  std::cout << "Current token: " << tokenToString(token.token)
-                            << '\n';
-                  expect(token, tkn);
-                  gs.pop();
-                  token = l.nextToken();
-                },
-                [&](NonTerminals prd) {
-                  std::cout << "NonTerminal found: " << nonTerminalToString(prd)
-                            << '\n';
-                  std::cout << "Current token: " << tokenToString(token.token)
-                            << '\n';
+    if (std::holds_alternative<TokenId>(x)) {
+      auto tkn = std::get<TokenId>(x);
 
-                  gs.pop();
-                  auto transition = m.at(prd, token.token);
+      std::cout << "Token found: " << tokenToString(tkn) << '\n';
+      std::cout << "Current token: " << tokenToString(token.token) << '\n';
+      expect(token, tkn);
+      gs.pop();
+      token = l.nextToken();
+    }
 
-                  if (!transition.has_value()) {
-                    throw std::runtime_error(std::format(
-                        "Transition from [{0}, {1}] doesn't exist. Crash at: "
+    if (std::holds_alternative<NonTerminals>(x)) {
+      auto nt = std::get<NonTerminals>(x);
+
+      std::cout << "NonTerminal found: " << nonTerminalToString(nt) << '\n';
+      std::cout << "Current token: " << tokenToString(token.token) << '\n';
+
+      gs.pop();
+      auto transition = m.at(nt, token.token);
+
+      if (!transition.has_value()) {
+        throw std::runtime_error(
+            std::format("Transition from [{0}, {1}] doesn't exist. Crash at: "
                         "[{2}:{3}]",
-                        nonTerminalToString(prd), tokenToString(token.token),
+                        nonTerminalToString(nt), tokenToString(token.token),
                         token.line, token.col));
-                  }
+      }
 
-                  auto value = transition.value();
+      auto rules = transition.value();
 
-                  for (auto v = value.rbegin(); v != value.rend(); ++v) {
-                    std::visit(Visitor{[](NonTerminals prod) {
-                                         std::cout << "Inserting non terminal: "
-                                                   << nonTerminalToString(prod)
-                                                   << '\n';
-                                       },
-                                       [](TokenId tknId) {
-                                         std::cout << "Inserting token: "
-                                                   << tokenToString(tknId)
-                                                   << '\n';
-                                       }},
-                               *v);
-                    gs.push(*v);
-                  }
-                }},
-        x);
+      for (auto r = rules.rbegin(); r != rules.rend(); ++r) {
+        auto gi = *r;
+
+        if (std::holds_alternative<TokenId>(gi)) {
+          auto tkn = std::get<TokenId>(gi);
+
+          std::cout << "Token found: " << tokenToString(tkn) << '\n';
+        } else if (std::holds_alternative<NonTerminals>(gi)) {
+          auto nt = std::get<NonTerminals>(gi);
+
+          std::cout << "NonTerminal found: " << nonTerminalToString(nt) << '\n';
+        }
+
+        gs.push(gi);
+      }
+    }
 
     std::cout << "Next iter\n\n";
   }
