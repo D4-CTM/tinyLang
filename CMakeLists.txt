@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 project(tinyLang LANGUAGES CXX)
 
-# -std=c++20 (EXTENSIONS OFF keeps it from becoming -std=gnu++20)
-set(CMAKE_CXX_STANDARD 20)
+# -std=c++23 (EXTENSIONS OFF keeps it from becoming -std=gnu++23)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

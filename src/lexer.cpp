@@ -76,8 +76,8 @@ enum LexerStates {
 Token Lexer::nextToken() {
   LexerStates state = INITIAL_STATE;
   std::string str = "";
-  int startLine = line;
-  int startCol = col;
+  std::uint32_t startLine = line;
+  std::uint32_t startCol = col;
   while (ch != EOF) {
     switch (state) {
 

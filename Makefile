@@ -1,7 +1,7 @@
 CXX      := g++
 CXXFLAGS := -Isrc -I/usr/local/include
 LDFLAGS  := -L/usr/local/lib
-VERSION  := c++20
+VERSION  := c++23
 LDLIBS   := 
 
 GRAPH ?= grammar/graph.png

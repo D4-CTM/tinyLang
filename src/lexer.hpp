@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <istream>
 #include <string>
 #include <unordered_map>
@@ -53,9 +54,8 @@ const auto keywords = std::unordered_map<std::string, TokenId>({
 struct Token {
   TokenId token;
   std::string data;
-  int line;
-  int col;
-
+  std::uint32_t line;
+  std::uint32_t col;
 };
 
 const char *tokenToString(TokenId& tkn);

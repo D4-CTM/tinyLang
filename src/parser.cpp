@@ -17,7 +17,7 @@ void Parser::expect(TokenId expected) {
 void Parser::program() {
   assign();
   if (tkn.token != TokenId::END_OF_FILE) {
-    parse();
+    program();
   }
 }
 

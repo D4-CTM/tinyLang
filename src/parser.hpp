@@ -1,13 +1,13 @@
 #pragma once
 #include "lexer.hpp"
 
-class Parser {
+class [[deprecated("Please use 'grammar.hpp' implementation")]] Parser {
 public:
   Parser(std::istream &is) : lexer(is), tkn(lexer.nextToken()) {}
 
   inline void parse() {
-      program();
-      expect(TokenId::END_OF_FILE);
+    program();
+    expect(TokenId::END_OF_FILE);
   }
 
 private:
