@@ -24,8 +24,7 @@ using GrammarItem = std::variant<TokenId, NonTerminals>;
 using Productions = std::vector<GrammarItem>;
 using GrammarStack = std::stack<GrammarItem>;
 
-template <std::uint32_t rows, std::uint32_t cols> 
-struct Matrix {
+template <std::uint32_t rows, std::uint32_t cols> struct Matrix {
   std::optional<Productions> data[rows][cols]{};
 
   void setAt(NonTerminals nonTerm, TokenId tkn, Productions gr) {
@@ -33,10 +32,6 @@ struct Matrix {
     auto c = mapToken(tkn);
     data[r][c] = gr;
   };
-
-  std::optional<Productions> operator[](NonTerminals nonTerm, TokenId tkn){
-      return at(nonTerm, tkn);
-  } 
 
   std::optional<Productions> at(NonTerminals nonTerm, TokenId tkn) {
     auto r = static_cast<std::uint32_t>(nonTerm);
@@ -58,6 +53,7 @@ public:
   Parser(Lexer &l);
 
   void parse();
+
 private:
   void buildMatrix();
 

@@ -179,7 +179,8 @@ void Parser::parse() {
 
                   if (!transition.has_value()) {
                     throw std::runtime_error(std::format(
-                        "Transition from [{0}, {1}] doesn't exist. Crash at: [{2}:{3}]",
+                        "Transition from [{0}, {1}] doesn't exist. Crash at: "
+                        "[{2}:{3}]",
                         nonTerminalToString(prd), tokenToString(token.token),
                         token.line, token.col));
                   }

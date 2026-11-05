@@ -5,10 +5,9 @@
 
 void Parser::expect(TokenId expected) {
   if (tkn.token != expected) {
-    throw std::runtime_error(
-        std::format("Expected: {0}. Received: {1}. At [{2}:{3}]",
-                    tokenToString(expected),
-                    tokenToString(tkn.token), tkn.line, tkn.col));
+    throw std::runtime_error(std::format(
+        "Expected: {0}. Received: {1}. At [{2}:{3}]", tokenToString(expected),
+        tokenToString(tkn.token), tkn.line, tkn.col));
   }
 
   nextToken();

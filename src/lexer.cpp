@@ -136,33 +136,33 @@ Token Lexer::nextToken() {
       } else {
         str.push_back(ch);
         nextChar();
-        return {TokenId::INVALID_TOKEN, str,startLine,startCol};
+        return {TokenId::INVALID_TOKEN, str, startLine, startCol};
       }
       break;
 
     case OPEN_PARENTHESIS_STATE:
-      return {TokenId::OPEN_PARENTHESIS, "(",startLine,startCol};
+      return {TokenId::OPEN_PARENTHESIS, "(", startLine, startCol};
 
     case CLOSE_PARENTHESIS_STATE:
-      return {TokenId::CLOSE_PARENTHESIS, ")",startLine,startCol};
+      return {TokenId::CLOSE_PARENTHESIS, ")", startLine, startCol};
 
     case OPEN_CURLY_BRACES_STATE:
-      return {TokenId::OPEN_CURLY_BRACE, "{",startLine,startCol};
+      return {TokenId::OPEN_CURLY_BRACE, "{", startLine, startCol};
 
     case CLOSE_CURLY_BRACES_STATE:
-      return {TokenId::CLOSE_CURLY_BRACE, "}",startLine,startCol};
+      return {TokenId::CLOSE_CURLY_BRACE, "}", startLine, startCol};
 
     case SEMICOLON_STATE:
-      return {TokenId::SEMICOLON, ";",startLine,startCol};
+      return {TokenId::SEMICOLON, ";", startLine, startCol};
 
     case EQUAL_STATE:
-      return {TokenId::EQUAL, "=",startLine,startCol};
+      return {TokenId::EQUAL, "=", startLine, startCol};
 
     case PLUS_STATE:
-      return {TokenId::PLUS, "+",startLine,startCol};
+      return {TokenId::PLUS, "+", startLine, startCol};
 
     case STAR_STATE:
-      return {TokenId::STAR, "*",startLine,startCol};
+      return {TokenId::STAR, "*", startLine, startCol};
 
     case IDENTIFIER_STATE:
       if (isAlphaNum(ch) || ch == '_') {
@@ -174,7 +174,7 @@ Token Lexer::nextToken() {
           return {keywords.at(str), str};
         }
 
-        return {TokenId::IDENTIFIER, str,startLine,startCol};
+        return {TokenId::IDENTIFIER, str, startLine, startCol};
       }
       break;
 
@@ -187,7 +187,7 @@ Token Lexer::nextToken() {
         nextChar();
         state = DECIMAL_FLOAT_CONSTANT_IDENTIFIER;
       } else {
-        return {TokenId::DECIMAL_INTEGER_CONSTANT, str,startLine,startCol};
+        return {TokenId::DECIMAL_INTEGER_CONSTANT, str, startLine, startCol};
       }
       continue;
 
@@ -197,7 +197,7 @@ Token Lexer::nextToken() {
         nextChar();
         state = DECIMAL_FLOAT_CONSTANT;
       } else {
-        return {TokenId::INVALID_FLOAT_CONSTANT, str,startLine,startCol};
+        return {TokenId::INVALID_FLOAT_CONSTANT, str, startLine, startCol};
       }
       break;
 
@@ -206,7 +206,7 @@ Token Lexer::nextToken() {
         str.push_back(ch);
         nextChar();
       } else {
-        return {TokenId::DECIMAL_FLOAT_CONSTANT, str,startLine,startCol};
+        return {TokenId::DECIMAL_FLOAT_CONSTANT, str, startLine, startCol};
       }
       break;
 
@@ -217,7 +217,7 @@ Token Lexer::nextToken() {
         state = SECOND_STARTING_COMMA_IDENTIFIER;
       } else if (ch == '\n') {
         nextChar();
-        return {TokenId::INVALID_STRING_LITERAL, "",startLine,startCol};
+        return {TokenId::INVALID_STRING_LITERAL, "", startLine, startCol};
       } else {
         str.push_back(ch);
         state = SINGLE_LINE_STRING_LITERAL;
@@ -231,7 +231,7 @@ Token Lexer::nextToken() {
         state = MULTI_LINE_STRING_LITERAL;
       } else {
         nextChar();
-        return {TokenId::SINGLE_LINE_STRING_LITERAL, str,startLine,startCol};
+        return {TokenId::SINGLE_LINE_STRING_LITERAL, str, startLine, startCol};
       }
       break;
 
@@ -263,7 +263,7 @@ Token Lexer::nextToken() {
     case SECOND_ENDING_COMMA_IDENTIFIER:
       if (ch == '"') {
         nextChar();
-        return {TokenId::MULTI_LINE_STRING_LITERAL, str,startLine,startCol};
+        return {TokenId::MULTI_LINE_STRING_LITERAL, str, startLine, startCol};
       } else {
         str.push_back('"');
         str.push_back('"');
@@ -277,10 +277,10 @@ Token Lexer::nextToken() {
     case SINGLE_LINE_STRING_LITERAL:
       if (ch == '\"') {
         nextChar();
-        return {TokenId::SINGLE_LINE_STRING_LITERAL, str,startLine,startCol};
+        return {TokenId::SINGLE_LINE_STRING_LITERAL, str, startLine, startCol};
       } else if (ch == '\n') {
         nextChar();
-        return {TokenId::INVALID_STRING_LITERAL, str,startLine,startCol};
+        return {TokenId::INVALID_STRING_LITERAL, str, startLine, startCol};
       }
       str.push_back(ch);
       nextChar();
@@ -294,7 +294,7 @@ Token Lexer::nextToken() {
         nextChar();
         state = BLOCK_COMMENT_STATE;
       } else {
-        return {TokenId::INVALID_TOKEN, str,startLine,startCol};
+        return {TokenId::INVALID_TOKEN, str, startLine, startCol};
       }
       break;
 
@@ -345,7 +345,7 @@ Token Lexer::nextToken() {
         nextChar();
         state = HEXADECIMAL_CONSTANT_STATE;
       } else {
-        return {TokenId::INVALID_HEX_CONSTANT, str,startLine,startCol};
+        return {TokenId::INVALID_HEX_CONSTANT, str, startLine, startCol};
       }
       break;
 
@@ -354,7 +354,7 @@ Token Lexer::nextToken() {
         str.push_back(ch);
         nextChar();
       } else {
-        return {TokenId::HEX_CONSTANT, str,startLine,startCol};
+        return {TokenId::HEX_CONSTANT, str, startLine, startCol};
       }
       break;
 
@@ -364,7 +364,7 @@ Token Lexer::nextToken() {
         nextChar();
         state = BINARY_CONSTANT_STATE;
       } else {
-        return {TokenId::INVALID_BINARY_CONSTANT, str,startLine,startCol};
+        return {TokenId::INVALID_BINARY_CONSTANT, str, startLine, startCol};
       }
       break;
 
@@ -373,7 +373,7 @@ Token Lexer::nextToken() {
         str.push_back(ch);
         nextChar();
       } else {
-        return {TokenId::BINARY_CONSTANT, str,startLine,startCol};
+        return {TokenId::BINARY_CONSTANT, str, startLine, startCol};
       }
       break;
 
@@ -383,7 +383,7 @@ Token Lexer::nextToken() {
         nextChar();
         state = OCTAL_CONSTANT_STATE;
       } else {
-        return {TokenId::INVALID_OCTAL_CONSTANT, str,startLine,startCol};
+        return {TokenId::INVALID_OCTAL_CONSTANT, str, startLine, startCol};
       }
       break;
 
@@ -392,20 +392,20 @@ Token Lexer::nextToken() {
         str.push_back(ch);
         nextChar();
       } else {
-        return {TokenId::OCTAL_CONSTANT, str,startLine,startCol};
+        return {TokenId::OCTAL_CONSTANT, str, startLine, startCol};
       }
       break;
 
     default:
       nextChar();
-      return {TokenId::INVALID_TOKEN, str,startLine,startCol};
+      return {TokenId::INVALID_TOKEN, str, startLine, startCol};
     }
   }
 
-  return {TokenId::END_OF_FILE, "<<EOF>>",startLine,startCol};
+  return {TokenId::END_OF_FILE, "<<EOF>>", startLine, startCol};
 }
 
-const char * tokenToString(TokenId& tkn) {
+const char *tokenToString(TokenId &tkn) {
   switch (tkn) {
   case TokenId::OPEN_PARENTHESIS:
     return "OPEN_PARENTHESIS";

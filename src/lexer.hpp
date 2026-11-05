@@ -58,7 +58,7 @@ struct Token {
   std::uint32_t col;
 };
 
-const char *tokenToString(TokenId& tkn);
+const char *tokenToString(TokenId &tkn);
 
 class Lexer {
 public:
