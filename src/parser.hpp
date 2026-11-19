@@ -1,26 +1,47 @@
 #pragma once
+#include "AST/baseNode.hpp"
+#include "AST/expressions/baseExprNode.hpp"
+#include "AST/programNodes.hpp"
 #include "lexer.hpp"
+#include <memory>
 
-class [[deprecated("Please use 'grammar.hpp' implementation")]] Parser {
+using BaseNodePtr = std::unique_ptr<BaseNode>;
+using ExprNodePtr = std::unique_ptr<BaseExprNode>;
+using ProgramNodePtr = std::unique_ptr<BaseProgramNode>;
+
+class Parser {
 public:
-  Parser(std::istream &is) : lexer(is), tkn(lexer.nextToken()) {}
+  Parser(Lexer &lexer) : lexer(lexer), tkn(lexer.nextToken()) {}
 
-  inline void parse() {
-    program();
+  [[nodiscard]]
+  inline BaseNodePtr parse() {
+    auto p = program();
     expect(TokenId::END_OF_FILE);
+    return p;
   }
 
 private:
   inline void nextToken() { tkn = lexer.nextToken(); }
 
-  void program();
-  void assign();
-  void expr();
-  void term();
-  void fact();
+  [[nodiscard]]
+  ProgramNodePtr program();
+
+  [[nodiscard]]
+  BaseNodePtr assign();
+
+  [[nodiscard]]
+  ExprNodePtr expr();
+
+  [[nodiscard]]
+  ExprNodePtr term();
+
+  [[nodiscard]]
+  ExprNodePtr fact();
 
   void expect(TokenId expected);
 
-  Lexer lexer;
+  constexpr SourceLocation loc() { return {tkn.line, tkn.col}; }
+
+  Lexer& lexer;
   Token tkn;
 };

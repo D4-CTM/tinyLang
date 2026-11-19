@@ -1,5 +1,6 @@
 CXX      := g++
 CXXFLAGS := -Isrc -I/usr/local/include
+CXXSANITIZER := # -O0 -fsanitize=address -fno-omit-frame-pointer
 LDFLAGS  := -L/usr/local/lib
 VERSION  := c++23
 LDLIBS   := 
@@ -10,7 +11,7 @@ GRAPH ?= grammar/graph.png
 
 build:
 	mkdir -p build
-	$(CXX) -std=$(VERSION) $(CXXFLAGS) -o build/tinyLang main.cpp src/*.cpp $(LDFLAGS) $(LDLIBS)
+	$(CXX) -std=$(VERSION) $(CXXFLAGS) $(CXXSANITIZER) -o build/tinyLang main.cpp src/*.cpp src/**/*.cpp $(LDFLAGS) $(LDLIBS)
 
 graph:
 	reflex --graphs-file=grammar/grammar.dot grammar/grammar.l

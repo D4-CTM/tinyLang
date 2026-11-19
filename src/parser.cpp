@@ -1,6 +1,13 @@
 #include "parser.hpp"
+#include "AST/baseNode.hpp"
+#include "AST/expressions/binaryExprNode.hpp"
+#include "AST/expressions/floatLiteralNode.hpp"
+#include "AST/expressions/identExprNode.hpp"
+#include "AST/expressions/intLiteralNode.hpp"
+#include "AST/programNodes.hpp"
 #include "lexer.hpp"
 #include <format>
+#include <memory>
 #include <stdexcept>
 
 void Parser::expect(TokenId expected) {
@@ -13,48 +20,80 @@ void Parser::expect(TokenId expected) {
   nextToken();
 }
 
-void Parser::program() {
-  assign();
-  if (tkn.token != TokenId::END_OF_FILE) {
-    program();
+ProgramNodePtr Parser::program() {
+  auto loc_ = loc();
+  ItemsVector items;
+  items.push_back(std::move(assign()));
+  while (tkn.token != TokenId::END_OF_FILE) {
+    items.push_back(std::move(assign()));
   }
+
+  return std::make_unique<ProgramNode>(loc_, std::move(items));
 }
 
-void Parser::assign() {
+BaseNodePtr Parser::assign() {
   expect(TokenId::IDENTIFIER);
   expect(TokenId::EQUAL);
-  expr();
+  auto ex = expr();
+  expect(TokenId::SEMICOLON);
+  return ex;
 }
 
-void Parser::expr() {
-  term();
+ExprNodePtr Parser::expr() {
+  SourceLocation loc_ = loc();
+  auto lhs = term();
   while (tkn.token == TokenId::PLUS) {
+    BinaryOp op = BinaryOp::OpAdd;
     nextToken();
-    term();
+    auto rhs = term();
+    lhs = std::make_unique<BinaryExprNode>(loc_, op, std::move(lhs),
+                                           std::move(rhs));
   }
+
+  return lhs;
 }
 
-void Parser::term() {
-  fact();
+ExprNodePtr Parser::term() {
+  SourceLocation loc_ = loc();
+  auto lhs = fact();
   while (tkn.token == TokenId::STAR) {
+    BinaryOp op = BinaryOp::OpMul;
     nextToken();
-    fact();
+    auto rhs = fact();
+    lhs = std::make_unique<BinaryExprNode>(loc_, op, std::move(lhs),
+                                           std::move(rhs));
   }
+
+  return lhs;
 }
 
-void Parser::fact() {
+ExprNodePtr Parser::fact() {
+  SourceLocation loc_ = loc();
   switch (tkn.token) {
-  case TokenId::IDENTIFIER:
-  case TokenId::DECIMAL_FLOAT_CONSTANT:
-  case TokenId::DECIMAL_INTEGER_CONSTANT:
+  case TokenId::IDENTIFIER: {
+    auto ident = std::make_unique<IdentExprNode>(loc_, tkn.data);
     nextToken();
-    break;
+    return ident;
+  }
 
-  case TokenId::OPEN_PARENTHESIS:
+  case TokenId::DECIMAL_FLOAT_CONSTANT: {
+    auto flt = std::make_unique<FloatLiteralNode>(loc_, std::stof(tkn.data));
     nextToken();
-    expr();
+    return flt;
+  }
+
+  case TokenId::DECIMAL_INTEGER_CONSTANT: {
+    auto intg = std::make_unique<IntLiteralNode>(loc_, std::stoi(tkn.data));
+    nextToken();
+    return intg;
+  }
+
+  case TokenId::OPEN_PARENTHESIS: {
+    nextToken();
+    auto ex = expr();
     expect(TokenId::CLOSE_PARENTHESIS);
-    break;
+    return ex;
+  }
 
   default:
     throw std::runtime_error(std::format(

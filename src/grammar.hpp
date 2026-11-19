@@ -41,9 +41,9 @@ template <std::uint32_t rows, std::uint32_t cols> struct Matrix {
 };
 
 
-class Parser {
+class ParserMatrix {
 public:
-  Parser(Lexer &l);
+  ParserMatrix(Lexer &l);
 
   void parse();
 

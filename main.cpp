@@ -1,4 +1,5 @@
-#include "src/grammar.hpp"
+#include "src/parser.hpp"
+#include "src/visitors/printVisitor.hpp"
 #include <exception>
 #include <fstream>
 #include <iostream>
@@ -17,8 +18,9 @@ int main(int argc, const char **argv) {
     Parser parser(lexer);
 
     try {
-      parser.parse();
-      std::cout << "File: '" << argv[i] << "' is accepted" << '\n';
+      auto root = parser.parse();
+      AstPrinter printer(std::cout);
+      printer.visit(*root);
     } catch (std::exception &ex) {
       std::cerr << ex.what() << '\n';
     }

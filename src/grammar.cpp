@@ -75,9 +75,9 @@ std::uint32_t mapToken(TokenId &tkn) {
   }
 }
 
-Parser::Parser(Lexer &l) : l(l) { buildMatrix(); }
+ParserMatrix::ParserMatrix(Lexer &l) : l(l) { buildMatrix(); }
 
-void Parser::buildMatrix() {
+void ParserMatrix::buildMatrix() {
   // --- PROGRAM ---
   m.setAt(NonTerminals::PROGRAM, TokenId::IDENTIFIER,
           {NonTerminals::ASSIGN, NonTerminals::PROGRAM_P});
@@ -163,7 +163,7 @@ void printVariant(GrammarItem gi) {
   }
 }
 
-void Parser::parse() {
+void ParserMatrix::parse() {
   gs.push(TokenId::END_OF_FILE);
   gs.push(NonTerminals::PROGRAM);
 
